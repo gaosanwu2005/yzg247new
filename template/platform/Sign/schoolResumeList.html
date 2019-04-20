@@ -1,0 +1,106 @@
+{extend name="platform/base" /}
+{block name="main"}
+<div class="row padder-v">
+    <div class="col-sm-9">
+        <a class="btn btn-sm btn-primary" href="{:__URL('PLATFORM_MAIN/Sign/addSchoolResume')}" ><i class="fa fa-plus"></i>&nbsp;添加学校报名信息</a>
+    </div>
+    <div class="col-sm-2">
+        <div class="input-group">
+            <input type="text" id="search_text" class="input-sm form-control" placeholder="请输入用户名">
+        </div>
+    </div>
+    <div class="col-sm-1">
+        <div class="input-group">
+                    <span class="input-group-btn">
+                    <button class="btn btn-sm btn-default" type="button" onclick="LoadingInfo(1)">搜索</button>
+                    </span>
+        </div>
+    </div>
+</div>
+<section class="panel panel-default">
+    <div class="table-responsive">
+        <table  class="table table-striped b-t b-light text-sm">
+            <thead>
+            <tr>
+                <th width="20"><input type="checkbox"></th>
+                <th class="center">用户ID</th>
+                <th class="center">姓名</th>
+                <th class="center">性别</th>
+                <th class="center">民族</th>
+                <th class="center">身份证号</th>
+                <th class="center">生日</th>
+                <th class="center">详细地址</th>
+                <th class="center">收货地址</th>
+                <th class="center">手机</th>
+                <th class="center">备用手机</th>
+                <th class="center">操作</th>
+            </tr>
+            <tbody id="list">
+            <tr></tr>
+            </tbody>
+        </table>
+    </div>
+    {include file="platform/page" /}
+</section>
+{/block}
+{block name="script"}
+<script type="text/javascript">
+    $(function(){
+        LoadingInfo(1);
+    });
+    //分页数据
+    function LoadingInfo(pageIndex) {
+        var search_text = $("#search_text").val();
+        $.ajax({
+            type : "post",
+            url : "{:__URL('PLATFORM_MAIN/Sign/schoolResumeList')}",
+            async : true,
+            data : {
+                "pageIndex" : pageIndex, "search_text" : search_text
+            },
+            success : function(data) {
+                var html = '';
+                $("#total_count_num").text(data["total_count"]);
+                $("#page_count_num").text(data["page_count"]);
+                $("#page_count").val(data["page_count"]);
+                $("#pageNumber a").remove();
+                if (data["data"].length > 0) {
+                    for (var i = 0; i < data["data"].length; i++) {
+                        html += '<tr>';
+                        html += '<td><input type="checkbox" name="sub" value="'+ data['data'][i]['uid']+'"></td>';
+                        html += '<td class="center">' + data["data"][i]["uid"]+ '</td>';
+                        html += '<td class="center">' + data["data"][i]["realname"]+ '</td>';
+                        if(data["data"][i]["sex"]==1){
+                            html += '<td class="center">男</td>';
+                        }else {
+                            html += '<td class="center">女</td>';
+                        }
+                        html += '<td class="center">' + data["data"][i]["national"]+ '</td>';
+                        html += '<td class="center">' + data["data"][i]["idcard"]+ '</td>';
+                        html += '<td class="center">' + data["data"][i]["birthday"]+ '</td>';
+                        html += '<td class="center">' + data["data"][i]["address"]+ '</td>';
+                        html += '<td class="center">' + data["data"][i]["address2"]+ '</td>';
+                        html += '<td class="center">' + data["data"][i]["mobile"]+ '</td>';
+                        html += '<td class="center">' + data["data"][i]["mobile2"]+ '</td>';
+                        html += '<a href="PLATFORM_MAIN/Sign/updateSchoolResume?uid='+ data['data'][i]['uid']+'">修改</a>&nbsp;&nbsp;<a style="cursor: pointer;" onclick="deleteSchoolResume('+data['data'][i]['uid']+')">删除</a></td> ';
+                        html += '</tr>';
+                    }
+                } else {
+                    html += '<tr align="center"><th colspan="9" style="text-align:center">暂无学校报名信息</th></tr>';
+                }
+                $("#list").html(html);
+                var totalpage = $("#page_count").val();
+                if (totalpage == 1) {
+                    changeClass("all");
+                }
+                var $html = pagenumShow(jumpNumber,totalpage,{$pageshow})
+                $("#pageNumber").append($html);
+                load();
+            }
+        });
+    }
+
+
+
+</script>
+{/block}

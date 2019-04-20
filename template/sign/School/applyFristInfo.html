@@ -1,0 +1,589 @@
+{extend name="sign/base" /} {block name="resources"}
+<link href="__TEMP__/{$style}/public/css/apply/style.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="__TEMP__/{$style}/public/css/ns_shop_common.css">
+<link rel="stylesheet" type="text/css" href="__TEMP__/{$style}/public/css/store_joinin.css">
+<script type="text/javascript" src="__TEMP__/{$style}/public/js/region.js"></script>
+<style>
+.btn:hover{color:white;}
+</style>
+{/block}
+{block name="head"}{/block}
+{block name="headGoodType"}{/block}
+{block name="main"}
+<div class="margin-w1210 clearfix" id="applySecond">
+	<div class="headerLayout">
+		<div class="headerCon">
+			<h1 id="mallLogo"><a href="{:__URL('SHOP_MAIN/index/index')}" class="header-logo"><img src="__UPLOAD__/{$web_info['logo']}"></a></h1>
+			<div class="header-extra">
+				<div class="panel-heading">
+					<div class="more">
+						<div class="progress">
+							<div class="progress-wrap">
+								<div class="progress-item ongoing">
+									<div class="number">1</div>
+									<div class="progress-desc">报名</div>
+								</div>
+							</div>
+							<div class="progress-wrap">
+								<div class="progress-item tobe">
+									<div class="number">2</div>
+									<div class="progress-desc">准考证下载</div>
+								</div>
+							</div>
+							<div class="progress-wrap">
+								<div class="progress-item tobe">
+									<div class="number">3</div>
+									<div class="progress-desc">录取成绩公布</div>
+								</div>
+							</div>
+							<div class="progress-wrap">
+								<div class="progress-item tobe">
+									<div class="number">4</div>
+									<div class="progress-desc">考试通知</div>
+								</div>
+							</div>
+							<div class="progress-wrap">
+								<div class="progress-item tobe">
+									<div class="number">5</div>
+									<div class="progress-desc">毕业</div>
+								</div>
+							</div>
+							<div class="progress-wrap">
+								<div class="progress-item tobe">
+									<div class="number">6</div>
+									<div class="progress-desc">进入人才中心</div>
+								</div>
+							</div>
+							<div class="progress-wrap">
+								<div class="progress-item tobe">
+									<div class="number">7</div>
+									<div class="progress-desc">信息发布</div>
+								</div>
+							</div>
+							<div class="progress-wrap">
+								<div class="progress-item tobe">
+									<div class="number">8</div>
+									<div class="progress-desc">单位录取</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+				<div class="store-joinin-apply">
+					{if condition="$apply_state eq 'is_apply' "}
+					<div class="main">
+						<div class="explain"><i></i>申请已经提交，请等待管理员审核</div>
+						<div class="bottom"></div>
+					</div>
+					{elseif condition="$apply_state eq 'refuse_apply' and $is_read eq 0"}
+					<div class="main">
+						<div class="explain"><i></i>您的申请被拒！您可以重新<a href="{:__URL('SHOP_MAIN/shop/applyfristagreement?is_read=1')}" class="point">申请入驻</a>!</div>
+						<div class="bottom"></div>
+					</div>
+					{elseif condition="$apply_state eq 'is_system' "}
+					<div class="main">
+						<div class="explain"><i></i>您的申请已被批准！您可以进入<a href="{:__URL('ADMIN_MAIN')}" class="point">个人管理中心</a>进行查看!</div>
+						<div class="bottom"></div>
+					</div>
+					{else /}
+					<div class="main">
+						<div id="apply_person_info" class="apply-company-info" style="display: block;">
+							<div class="note"><i></i>以下所需要上传的电子版资质文件仅支持JPG\GIF\PNG格式图片，大小请控制在4096K之内。</div>
+							<form id="form_person_info" name="form_person_info" action="" method="post" enctype="multipart/form-data" onsubmit="return supplier_person_Reg()">
+								<table border="0" cellpadding="0" cellspacing="0" class="all">
+									<thead>
+										<tr><th colspan="2" align="left">请按照提示填写本人真实的资料</th></tr>
+									</thead>
+									<tbody>
+										<tr>
+											<th><i>*</i>联系地址：</th>
+											<td>
+												<select name="province_id" id="seleAreaNext" onchange="GetProvince('#seleAreaNext','#seleAreaThird');getSelCity('#seleAreaThird','#seleAreaFouth');">
+													<option value="0">请选择省</option>
+												</select>
+												<select name="city_id" id="seleAreaThird" onchange="getSelCity('#seleAreaThird','#seleAreaFouth');">
+													<option value="0">请选择市</option>
+												</select>
+												<select name="district_id" id="seleAreaFouth">
+													<option value="-1">请选择区</option>
+												</select><span></span>
+											</td>
+										</tr>
+										<tr>
+											<th><i>*</i>详细地址：</th>
+											<td><input name="address" class="w200" type="text" value="{$info.address}" id="address"> <span></span></td>
+										</tr>
+										<tr>
+											<th><i>*</i>姓名：</th>
+											<td><input name="realname" type="text" class="w200" value="{$info.realname}" id="realname"> <span></span></td>
+										</tr>
+										<tr>
+											<th><i>*</i>性别：</th>
+											<td>
+												<select name='sex'>
+													<option value="1" {eq name="info.sex" value="1"}selected = "selected"{/eq}>男</option>
+
+													<option value="2" {eq name="info.sex" value="2"}selected = "selected"{/eq}>女</option>
+												</select>
+												<span></span>
+											</td>
+										</tr>
+										<tr>
+											<th><i>*</i>证件类型：</th>
+											<td>
+												<select name='type'>
+													<option value="1" {eq name="info.type" value="1"}selected = "selected"{/eq}>身份证</option>
+
+													<option value="2" {eq name="info.type" value="2"}selected = "selected"{/eq}>护照</option>
+												</select>
+												<span></span>
+											</td>
+										</tr>
+										<tr>
+											<th><i>*</i>身份证号码：</th>
+											<td><input name="idcard" type="text" class="w200" value="{$info.idcard}" id="idcard" onblur="extractionBirthday(this,'#birthday');"> <span></span></td>
+										</tr>
+										<tr>
+											<th><i>*</i>出生日期：</th>
+											<td><input name="birthday" type="text" class="w200" value="{$info.birthday}" id="birthday"> <span></span></td>
+										</tr>
+										<tr>
+											<th><i>*</i>民族：</th>
+											<td><input name="national" type="text" class="w200" value="{$info.national}" id="national"> <span></span></td>
+										</tr>
+										<tr>
+											<th><i>*</i>接受复习资料地址：</th>
+											<td><input name="address2" class="w200" type="text" value="{$info.address2}" id="address2"> <span></span></td>
+										</tr>
+										<tr>
+											<th><i>*</i>联系电话：</th>
+											<td><input name="mobile" type="text" class="w200" value="{$info.mobile}" id="mobile"> <span></span></td>
+										</tr>
+										<tr>
+											<th><i>*</i>备用电话：</th>
+											<td><input name="mobile2" type="text" class="w200" value="{$info.mobile2}" id="mobile2"> <span></span></td>
+										</tr>
+									</tbody>
+									<tfoot><tr><td colspan="20">&nbsp;</td></tr></tfoot>
+								</table>
+								<table border="0" cellpadding="0" cellspacing="0" class="all">
+									<thead>
+										<tr><th colspan="20" align="left">证件照信息</th></tr>
+									</thead>
+									<tbody>
+										<tr>
+											<th><i>*</i>本人证件照（上传）：</th>
+											<td>
+												<div>
+													<p><img id="imglogo1" src="" style="width: 100px; height: 100px; border: medium none; display: block;" /></p>
+													<a href="javascript:void(0);" style="display: block; position: relative; z-index: 1;">
+														<span style="width: 97px; height: 34px; position: absolute; left: 0; top: 0; z-index: 2; cursor: pointer;">
+															<input hidefocus="true" size="1" class="input-file" name="file_upload" id="contacts_card_electronic_1" nc_type="change_store_label" type="file" style="width: 97px; height: 34px; padding: 0; margin: 0; border: none 0; opacity: 0; filter: alpha(opacity = 0); cursor: pointer;" onchange="imgUpload1(this);">
+															<input type="hidden" id="logo1" value="" />
+														</span>
+														<a class="btn btn-default"><i class="fa fa-cloud-upload text"></i><span class="text">上传图片</span></a>
+													</a>
+												</div><span>（要求蓝底、红底电子版照片两寸，建议照相馆拍照。）</span>
+											</td>
+										</tr>
+										<tr>
+											<th><i>*</i>本人身份证（上传）：</th>
+											<td>
+												<div>
+													<p><img id="imglogo2" src="" style="width: 100px; height: 100px; border: medium none; display: block;" /></p>
+													<a href="javascript:void(0);" style="display: block; position: relative; z-index: 1;">
+														<span style="width: 97px; height: 34px; position: absolute; left: 0; top: 0; z-index: 2; cursor: pointer;">
+															<input hidefocus="true" size="1" class="input-file" name="file_upload" id="contacts_card_electronic_2" nc_type="change_store_label" type="file" style="width: 97px; height: 34px; padding: 0; margin: 0; border: none 0; opacity: 0; filter: alpha(opacity = 0); cursor: pointer;" onchange="imgUpload2(this);">
+															<input type="hidden" id="logo2" value="" />
+														</span>
+														<a class="btn btn-default"><i class="fa fa-cloud-upload text"></i><span class="text">上传图片</span></a>
+													</a>
+												</div><span>（要求扫描彩色上传，建议扫描仪原图上传，包含正反面。）</span>
+											</td>
+										</tr>
+										<tr>
+											<th><i>*</i>本人毕业证（上传）：</th>
+											<td>
+												<div>
+													<p><img id="imglogo3" src="" style="width: 100px; height: 100px; border: medium none; display: block;" /></p>
+													<a href="javascript:void(0);" style="display: block; position: relative; z-index: 1;">
+														<span style="width: 97px; height: 34px; position: absolute; left: 0; top: 0; z-index: 2; cursor: pointer;">
+															<input hidefocus="true" size="1" class="input-file" name="file_upload" id="contacts_card_electronic_3" nc_type="change_store_label" type="file" style="width: 97px; height: 34px; padding: 0; margin: 0; border: none 0; opacity: 0; filter: alpha(opacity = 0); cursor: pointer;" onchange="imgUpload3(this);">
+															<input type="hidden" id="logo3" value="" />
+														</span>
+														<a class="btn btn-default"><i class="fa fa-cloud-upload text"></i><span class="text">上传图片</span></a>
+													</a>
+												</div>
+												<span>（专科学历需上传，高中或中专毕业证，必须真实有效，如有虚假，后果自行承担。）</span>
+												<span>（本科学历需上传学信网电子备案表截图，学信网下载网址www.chsi.com.cn）</span>
+											</td>
+										</tr>
+									</tbody>
+									<tfoot><tr><td colspan="20">&nbsp;</td></tr></tfoot>
+								</table>
+								<table border="0" cellpadding="0" cellspacing="0" class="all">
+									<thead>
+										<tr>
+											<th colspan="20" align="middle">保存个人信息库（以上信息本系统严格保密）</th>
+										</tr>
+									</thead>
+									<tfoot><tr><td colspan="20">&nbsp;</td></tr></tfoot>
+								</table>
+								<input type="hidden" name="shownum" value="1">
+								<input type="hidden" name="do" value="1">
+								<input type="hidden" name="person" value="1">
+								<div class="bottom">
+									<input type="button" value="上一步" class="btn" onclick="location.href='SHOP_MAIN/shop/applyfristagreement'">
+									<input type="button" value="下一步" class="btn" onclick="next_page()">
+								</div>
+							</form>
+						</div>
+					</div>
+				{/if}
+				</div>
+			</div>
+			<div id="applyThird"  style="display:none;">
+				<div class="headerLayout">
+					<div class="headerCon">
+						<h1 id="mallLogo"><a href="{:__URL('SHOP_MAIN/index/index')}" class="header-logo"><img src="__UPLOAD__/{$web_info['logo']}"></a></h1>
+						<div class="header-extra">
+							<div class="panel-heading">
+								<div class="more">
+									<div class="progress">
+										<div class="progress-wrap">
+											<div class="progress-item ongoing">
+												<div class="number">1</div>
+												<div class="progress-desc">报名</div>
+											</div>
+										</div>
+										<div class="progress-wrap">
+											<div class="progress-item tobe">
+												<div class="number">2</div>
+												<div class="progress-desc">准考证下载</div>
+											</div>
+										</div>
+										<div class="progress-wrap">
+											<div class="progress-item tobe">
+												<div class="number">3</div>
+												<div class="progress-desc">录取成绩公布</div>
+											</div>
+										</div>
+										<div class="progress-wrap">
+											<div class="progress-item tobe">
+												<div class="number">4</div>
+												<div class="progress-desc">考试通知</div>
+											</div>
+										</div>
+										<div class="progress-wrap">
+											<div class="progress-item tobe">
+												<div class="number">5</div>
+												<div class="progress-desc">毕业</div>
+											</div>
+										</div>
+										<div class="progress-wrap">
+											<div class="progress-item tobe">
+												<div class="number">6</div>
+												<div class="progress-desc">进入人才中心</div>
+											</div>
+										</div>
+										<div class="progress-wrap">
+											<div class="progress-item tobe">
+												<div class="number">7</div>
+												<div class="progress-desc">信息发布</div>
+											</div>
+										</div>
+										<div class="progress-wrap">
+											<div class="progress-item tobe">
+												<div class="number">8</div>
+												<div class="progress-desc">单位录取</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="store-joinin-apply">
+					<div class="main">
+						<div id="apply_company_info" class="apply-company-info">
+							<form id="form_store_info" name="form_company_info" action="" method="post" enctype="multipart/form-data" onsubmit="return supplier_Reg()">
+								<table border="0" cellpadding="0" cellspacing="0" class="all">
+									<thead>
+										<tr>
+											<th colspan="20" align="left">报考信息填写</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<th><i>*</i>报考院校：</th>
+											<td>
+												<select name='school'size="1" id="school">
+													<option value="0">请选择</option>
+													{volist name="schools" id="vo" empty="暂时没有数据" }
+													<option value="{$vo.id}" {eq name="info.school" value="$vo.id"}selected = "selected"{/eq}>{$vo.name}</option>
+													{/volist}
+												</select> <span></span>
+												<div id="grade_explain" class="grade_explain"></div>
+											</td>
+										</tr>
+										<tr>
+											<th><i>*</i>报考专业：</th>
+											<td>
+												<select name="professional" size="1" id="professional">
+													<option value="0">请选择</option>
+													{volist name="professional" id="vo" empty="暂时没有数据" }
+													<option value="{$vo.id}">{$vo.name}</option>
+													{/volist}
+												</select> <span></span>
+												<div id="grade_explain" class="grade_explain"></div>
+											</td>
+										</tr>
+										<tr>
+											<th><i>*</i>提升层次：</th>
+											<td>
+												<select name="record" size="1" id="record">
+													<option value="0">请选择</option>
+													{volist name="record" id="vo" empty="暂时没有数据" }
+													<option value="{$vo.id}">{$vo.name}</option>
+													{/volist}
+												</select>
+												<span></span>
+											</td>
+										</tr>
+										<tr>
+											<th><i>*</i>上课类型：</th>
+											<td>
+												<select name="classtype" size="1" id="classtype">
+													<option value="0">请选择</option>
+													{volist name="classtype" id="vo" empty="暂时没有数据" }
+													<option value="{$vo.id}">{$vo.name}</option>
+													{/volist}
+												</select>
+												<span></span>
+											</td>
+										</tr>
+									</tbody>
+									<tfoot><tr><td colspan="20">&nbsp;</td></tr></tfoot>
+								</table>
+								<input type="hidden" name="shownum" value="3">
+								<input type="hidden" name="do" value="1">
+								<div class="bottom">
+									<input type="button" value="上一步" class="btn" onclick="prev_page()">
+									<input type="button" value="下一步" class="btn" onclick="save()">
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{/block}
+{block name="RightSideBar"}{/block}
+{block name="bottom"}
+{include file='sign/controlBottom'/} {/block}
+{block name="javascript"}
+<script src="__TEMP__/{$style}/public/js/address_new.js"></script>
+<script src="__STATIC__/js/file_upload.js" type="text/javascript"></script>
+<script type="text/javascript">
+var flag = 1;
+function next_page(){
+	var flag=true;
+	flag=$.testing("#applySecond #apply_person_info");
+	if(flag){
+		$("#applySecond").hide();
+		$("#applyThird").show();
+		$.footer();
+	};
+}
+function prev_page(){
+	$("#applySecond").show();
+	$("#applyThird").hide();
+	$.footer();
+}
+function save(){
+	var realname=$("#realname").val();
+	var sex=$("#sex option:selected").text();
+	var national=$("#national").val();
+	var type=$("#type option:selected").text();
+	var idcard=$("#idcard").val();
+	var birthday=$("#birthday").val();
+	var province_id=$("#seleAreaNext").val();
+	var city_id=$("#seleAreaThird").val();
+	var district_id=$("#seleAreaFouth").val();
+	var idcard=$("#idcard").val();
+	var address=$("#address").val();
+	var address2=$("#address2").val();
+	var mobile=$("#mobile").val();
+	var mobile2=$("#mobile2").val();
+	var headimg=$("#logo1").val();
+	var idcardimg=$("#logo2").val();
+	var graduationimg=$("#logo3").val();
+
+	var school=$("#school option:selected").text();
+	var professional=$("#professional option:selected").text();
+	var record=$("#record option:selected").text();
+	var classtype=$("#classtype option:selected").text();
+	
+	if(school == 0){
+		$("#school").next().text("请选择报考院校").css({"float":"none"}).prev().focus();
+		return;
+	}else{
+		$("#school").next().text("");
+	}
+	if(professional == 0){
+		$("#professional").next().text("请选择报考专业").css({"float":"none"}).prev().focus();
+		return;
+	}else{
+		$("#professional").next().text("");
+	}
+	
+	if(record == 0){
+		$("#record").next().text("请选择提升层次").css({"float":"none"}).prev().focus();
+		return;
+	}else{
+		$("#record").next().text("");
+	}
+
+	if(classtype == 0){
+		$("#classtype").next().text("请选择上课类型").css({"float":"none"}).prev().focus();
+		return;
+	}else{
+		$("#classtype").next().text("");
+	}
+
+	$.ajax({
+		type:'post',
+		url:'{:__URL('SHOP_MAIN/sign/school/applyFristInfo')}',
+		data:{
+			"realname":realname,
+			"sex":sex,
+			"province_id":province_id,
+			"city_id":city_id,
+			"district_id":district_id,
+			"national":national,
+			"type":type,
+			"idcard":idcard,
+			"address":address,
+			"address2":address2,
+			"mobile":mobile,
+			"mobile":mobile2,
+			"headimg":headimg,
+			"idcardimg":idcardimg,
+			"graduationimg":graduationimg,
+			"school":school,
+			"professional":professional,
+			"record":record,
+			"classtype":classtype
+		},
+		success:function(data){
+			$.msg(data["message"],{time:2000});
+			if (data["code"] > 0) {
+				location.reload();
+			}
+		}
+	});
+}
+
+/**
+ *图片上传
+ */
+function imgUpload1(event) {
+	var fileid = $(event).attr("id");
+	var data = { 'file_path' : UPLOADCOMMON };
+	uploadFile(fileid,data,function(res){
+		if(res.code){
+			$("#imglogo1").attr("src","__UPLOAD__/"+res.data);
+			$("#logo1").val(res.data);
+			showTip(res.message,"success");
+		}else{
+			showTip(res.message,"error");
+		}
+	});
+}
+function imgUpload2(event) {
+	var fileid = $(event).attr("id");
+	var data = { 'file_path' : UPLOADCOMMON };
+	uploadFile(fileid,data,function(res){
+		if(res.code){
+			$("#imglogo2").attr("src","__UPLOAD__/"+res.data);
+			$("#logo2").val(res.data);
+			showTip(res.message,"success");
+		}else{
+			showTip(res.message,"error");
+		}
+	});
+}
+function imgUpload3(event) {
+	var fileid = $(event).attr("id");
+	var data = { 'file_path' : UPLOADCOMMON };
+	uploadFile(fileid,data,function(res){
+		if(res.code){
+			$("#imglogo3").attr("src","__UPLOAD__/"+res.data);
+			$("#logo3").val(res.data);
+			showTip(res.message,"success");
+		}else{
+			showTip(res.message,"error");
+		}
+	});
+}
+
+/**
+ * 省市区联动
+ */
+$(function() {
+		var selCity = $("#seleAreaNext");
+		var selCityCommpany= $("#seleAreaCommpanyNext");
+		// 添加省
+		$.ajax({
+			type : "post",
+			url : "{:__URL('SHOP_MAIN/shop/getProvince')}",
+			dataType : "json",
+			success : function(data) {
+				if (data != null && data.length > 0) {
+					for (var i = 0; i < data.length; i++) {
+						selCity.append("<option value='"+data[i].province_id+"'>"+data[i].province_name+"</option>");
+						selCityCommpany.append("<option value='"+data[i].province_id+"'>"+data[i].province_name+"</option>");
+					}
+				}
+			}
+		});
+	});
+
+//系统根据身份证号码获取出生年月
+function extractionBirthday(obj, name) {
+	var tmpStr = "";
+
+	var iIdNo = $(obj).val().replace(/^\s+|\s+$/g, "");
+
+	if ((iIdNo.length != 15) && (iIdNo.length != 18)) {
+		var msg = '输入的身份证号位数错误';
+		if($(obj).parent().children('.b_message').text()==''){
+			$(obj).parent().append('<b class="b_message">'+msg+'</b>');
+		}else{
+			$(obj).parent().children('.b_message').text(msg);
+		}
+		$(obj).focus();
+	} else {
+		$(obj).parent().children('.b_message').remove();
+	}
+
+	if (iIdNo.length == 15) {
+		tmpStr = iIdNo.substring(6, 12);
+		tmpStr = "19" + tmpStr;
+		tmpStr = tmpStr.substring(0, 4) + "-" + tmpStr.substring(4, 6) + "-" + tmpStr.substring(6);
+		$(name).val(tmpStr);
+	} else {
+		tmpStr = iIdNo.substring(6, 14);
+		tmpStr = tmpStr.substring(0, 4) + "-" + tmpStr.substring(4, 6) + "-" + tmpStr.substring(6);
+		$(name).val(tmpStr);
+	}
+}
+	
+</script>
+{/block}

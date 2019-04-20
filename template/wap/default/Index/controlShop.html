@@ -1,0 +1,110 @@
+<style type="text/css">
+    .shMall{
+
+        background: #fff;
+
+        margin-bottom: 7px;
+
+    }
+</style>
+<!--生活商城-->
+
+<div class="shMall">
+
+    <div class="category_name">
+        <span class="floor-left-nav">佳家生活商城</span><a class="floor-right-nav" href="#">查看更多<img  src="__TEMP__/{$style}/public/images/index-img/icon/icon-more.png" alt=""></a>
+    </div>
+
+    <div class="swiper-container swiper-vertical">
+
+        <div class="swiper-pagination"></div>
+
+        <div class="swiper-wrapper">
+
+
+
+            <div class="swiper-slide">
+
+                                    <span>
+
+                                        <img width="100%" src="__TEMP__/{$style}/public/images/index-img/mall-banner.png" alt="">
+
+                                    </span>
+
+            </div>
+
+            <div class="swiper-slide">
+
+                                    <span>
+
+                                        <img width="100%" src="__TEMP__/{$style}/public/images/index-img/mall-banner.png" alt="">
+
+                                    </span>
+
+            </div>
+
+            <div class="swiper-slide">
+
+                                    <span>
+
+                                        <img width="100%" src="__TEMP__/{$style}/public/images/index-img/mall-banner.png" alt="">
+
+                                    </span>
+
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+
+
+    <div class="pro-show" style="padding: 15px 10px 10px">
+
+        <div  data-space-between="10" data-slides-per-view="3" class="swiper-container swiper-init demo-swiper">
+
+            <div class="swiper-pagination"></div>
+
+            <div class="swiper-wrapper">
+
+                {volist name="favourite_goods" id="v"}
+
+                <div class="swiper-slide">
+
+                    <a href="{:addon_url('shop/Goods/goodsInfo',array('id'=>$v['goods_id']))}">
+
+                        <img src="{$v.image}" alt="">
+
+                    </a>
+
+                    <div class="p-desc">
+
+                        <p class="p-title">{:substr($v.goods_name,0,12)}</p>
+
+                        <p class="p-price-m"> 积分:{$v.shop_price}</p>
+
+                        <p class="p-price">
+
+                            <s>积分:{$v['shop_price']*1.2}</s>
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                {/volist}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+</div>
